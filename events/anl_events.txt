@@ -1,0 +1,823 @@
+#An Antique Land Events
+
+namespace = anl
+
+#Beginning of the Camelot quest chain
+narrative_event = {
+	id = anl.001
+	picture = GFX_evt_son_asking_father
+	title = anl.title.001
+	desc = EVTDESCanl.001
+	border = GFX_event_narrative_frame_religion
+	
+	min_age = 16
+	only_playable = yes
+	only_capable = yes
+	only_independent = yes
+	religion_group = christian
+	prisoner = no
+	ai = no
+	
+	trigger = {
+		AND = {
+			religion_group = christian
+			has_game_rule = {
+				name = an_antique_land_wonders
+				value = all
+			}
+			has_landed_title = c_gwent
+			NOR = {
+				has_global_flag = camelot_discovered
+				has_character_flag = camelot_quest
+				has_character_flag = camelot_quest_complete
+				20 = {
+					has_wonder = yes
+				}
+				trait = cruel
+				trait = cynical
+			}
+		}
+	}
+	mean_time_to_happen = {
+		months = 120
+	}
+	option = { #begin the quest
+		name = EVTOPTAanl.001
+		custom_tooltip = {
+			text = EVTOPTAanl.001.tooltip
+			set_character_flag = camelot_quest
+			character_event = {
+				id = anl.002
+				days = 8
+			}
+		}
+	}
+	option = { #end the quest
+		name = EVTOPTBanl.001
+		custom_tooltip = {
+			text = EVTOPTBanl.001.tooltip
+			prestige = 50
+		}
+	}
+}
+
+#Camelot quest chain event 2 - arthurian scholarship
+narrative_event = {
+	id = anl.002
+	picture = GFX_evt_elder_council
+	title = anl.title.002
+	desc = EVTDESCanl.002
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	
+	option = { #take the stone
+		name = EVTOPTAanl.002
+		add_artifact = sword_stone_anl
+		custom_tooltip = {
+			text = EVTOPTAanl.002.tooltip
+			character_event = {
+				id = anl.003
+				days = 8
+			}
+		}
+	}
+	option = { #reject the stone
+		name = EVTOPTBanl.002
+		custom_tooltip = {
+			text = EVTOPTBanl.002.tooltip
+			character_event = {
+				id = anl.003
+				days = 8
+			}
+		}
+	}
+}
+
+#Camelot quest chain event 3 - preparing supplies
+narrative_event = {
+	id = anl.003
+	picture = GFX_evt_armory
+	title = anl.title.003
+	desc = EVTDESCanl.003
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = { #little preparation
+		name = EVTOPTAanl.003
+		trigger = {
+			treasury >= 50
+		}
+		wealth = -50
+		custom_tooltip = {
+			text = EVTOPTAanl.003.tooltip
+			set_character_flag = camelot_quest_few_supplies
+			character_event = {
+				id = anl.004
+				days = 5
+			}
+		}
+	}
+	option = { #moderate preparation
+		name = EVTOPTBanl.003
+		trigger = {
+			treasury >= 100
+		}
+		wealth = -100
+		custom_tooltip = {
+			text = EVTOPTBanl.003.tooltip
+			set_character_flag = camelot_quest_supplies
+			character_event = {
+				id = anl.004
+				days = 14
+			}
+		}
+	}
+	option = { #extensive preparation
+		name = EVTOPTCanl.003
+		trigger = {
+			treasury >= 500
+		}
+		wealth = -500
+		custom_tooltip = {
+			text = EVTOPTCanl.003.tooltip
+			set_character_flag = camelot_quest_many_supplies
+			character_event = {
+				id = anl.004
+				days = 10
+			}
+		}
+	}
+	option = { #no preparation
+		name = EVTOPTDanl.003
+		custom_tooltip = {
+			text = EVTOPTDanl.003.tooltip
+			set_character_flag = camelot_quest_no_supplies
+			character_event = {
+				id = anl.004
+				days = 8
+			}
+		}
+	}
+}
+
+#Camelot quest chain event 8 - embarking on the journey
+narrative_event = {
+	id = anl.004
+	picture = GFX_evt_depopulated_town
+	title = anl.title.004
+	desc = EVTDESCanl.004
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAanl.004
+		trigger = {
+			treasury >= 50
+		}
+		wealth = -50
+		custom_tooltip = {
+			text = EVTOPTAanl.004.tooltip
+			add_character_modifier = {
+				modifier = arthurian_generosity
+				duration = -1
+			}
+			character_event = {
+				id = anl.005
+				days = 8
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBanl.004
+		trigger = {
+			NOT = {
+				has_character_flag = camelot_quest_no_supplies
+			}
+		}
+		custom_tooltip = {
+			text = EVTOPTBanl.004.tooltip
+			add_character_modifier = {
+				modifier = arthurian_generosity
+				duration = -1
+			}
+			if = {
+				limit = { has_character_flag = camelot_quest_many_supplies }
+				clr_character_flag = camelot_quest_many_supplies
+				set_character_flag = camelot_quest_supplies
+			}
+			else_if = {
+				limit = { has_character_flag = camelot_quest_supplies }
+				clr_character_flag = camelot_quest_supplies
+				set_character_flag = camelot_quest_few_supplies
+			}
+			else_if = {
+				limit = { has_character_flag = camelot_quest_few_supplies }
+				clr_character_flag = camelot_quest_few_supplies
+				set_character_flag = camelot_quest_no_supplies
+			}
+			character_event = {
+				id = anl.005
+				days = 8
+			}
+		}
+	}
+	option = {
+		name = EVTOPTCanl.004
+		add_character_modifier = {
+			modifier = shivering_in_cold
+			duration = -1
+		}
+		custom_tooltip = {
+			text = EVTOPTCanl.004.tooltip
+			add_character_modifier = {
+				modifier = arthurian_generosity
+				days = -1
+			}
+			character_event = {
+				id = anl.005
+				days = 8
+			}
+		}
+	}
+	option = {
+		name = EVTOPTDanl.004
+		custom_tooltip = {
+			text = EVTOPTDanl.004.tooltip
+			character_event = {
+				id = anl.005
+				days = 8
+			}
+		}
+	}
+}
+
+#Camelot quest chain event 5 - the fair maiden
+narrative_event = {
+	id = anl.005
+	picture = GFX_evt_homage_hf
+	title = anl.title.005
+	desc = EVTDESCanl.005
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	#immediate = {
+	#	create_character = {
+	#		age = 26
+	#		name = "Gwyneth"
+	#		culture = welsh
+	#		female = 100
+	#		random_traits = yes
+	#		religion = christian
+	#		health = 10
+	#		fertility = 0
+	#	}
+	#}
+	option = {
+		name = EVTOPTAanl.005
+		custom_tooltip = {
+			text = EVTOPTAanl.005.tooltip
+			add_character_modifier = {
+				modifier = arthurian_chastity
+				days = -1
+			}
+			character_event = {
+				id = anl.006
+				days = 14
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBanl.005
+		custom_tooltip = {
+			text = EVTOPTBanl.005.tooltip
+			add_character_modifier = {
+				modifier = memory_of_fair_maiden
+				duration = 365
+			}
+			character_event = {
+				id = anl.006
+				days = 8
+			}
+		}
+	}
+	option = {
+		name = EVTOPTCanl.005
+		custom_tooltip = {
+			text = EVTOPTCanl.005.tooltip
+			character_event = {
+				id = anl.0051
+				days = 1
+			}
+		}
+	}
+}
+
+#Camelot quest chain event 5.1 - death by a witch
+narrative_event = {
+	id = anl.0051
+	picture = GFX_evt_arson_hf
+	title = anl.title.0051
+	desc = EVTDESCanl.0051
+	border = GFX_event_narrative_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAanl.0051
+		hidden_tooltip = {
+			destroy_artifact = sword_stone_anl
+		}
+		death = {
+			death_reason = death_murder_unknown
+		}
+	}
+}
+
+#Camelot quest chain event 6 - the heathen
+narrative_event = {
+	id = anl.006
+	picture = GFX_evt_runestone_raising_oldgods
+	title = anl.title.006
+	desc = EVTDESCanl.006
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAanl.006
+		add_artifact = protective_branch_anl
+		custom_tooltip = {
+			text = EVTOPTAanl.006.tooltip
+			character_event = {
+				id = anl.007
+				days = 8
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBanl.006
+		custom_tooltip = {
+			text = EVTOPTBanl.006.tooltip
+			add_character_modifier = {
+				modifier = arthurian_faith
+				days = -1
+			}
+			character_event = {
+				id = anl.007
+				days = 8
+			}
+		}
+	}
+}
+
+#Camelot quest chain event 7 - the hordes of the undead
+narrative_event = {
+	id = anl.007
+	picture = GFX_evt_burning_castle_hf
+	title = anl.title.007
+	desc = EVTDESCanl.007
+	border = GFX_event_narrative_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAanl.007
+		custom_tooltip = {
+			text = EVTOPTAanl.007.tooltip
+			add_character_modifier = {
+				modifier = arthurian_bravery
+				days = -1
+			}
+			character_event = {
+				id = anl.0071
+				days = 1
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBanl.007
+		character_event = {
+			id = anl.0072
+			days = 8
+		}
+	}
+}
+
+#Camelot quest chain event 7.1 - the last battle
+narrative_event = {
+	id = anl.0071
+	picture = GFX_evt_viking_battle_oldgods
+	title = anl.title.0071
+	desc = EVTDESCanl.0071
+	border = GFX_event_narrative_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAanl.0071
+		custom_tooltip = {
+			text = EVTOPTAanl.0071.tooltip
+			character_event = {
+				id = anl.0072
+				days = 1
+			}
+		}
+	}
+}
+
+#Camelot quest chain event 7.2 - a frightening dream
+narrative_event = {
+	id = anl.0072
+	picture = GFX_evt_bad_news
+	title = anl.title.0072
+	desc = EVTDESCanl.0072
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAanl.0072
+		add_character_modifier = {
+			modifier = memory_of_last_battle
+			duration = -1
+		}
+		custom_tooltip = {
+			text = EVTOPTAanl.0072.tooltip
+			character_event = {
+				id = anl.008
+				days = 8
+			}
+		}
+	}
+}
+
+#Camelot quest chain event 8 - an evening at a bar
+narrative_event = {
+	id = anl.008
+	picture = GFX_evt_feast_hf
+	title = anl.title.008
+	desc = EVTDESCanl.008
+	border = GFX_event_narrative_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAanl.008
+		custom_tooltip = {
+			text = EVTOPTAanl.008.tooltip
+			add_character_modifier = {
+				modifier = fought_at_bar
+				duration = 132
+			}
+			character_event = {
+				id = anl.009
+				days = 14
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBanl.008
+		custom_tooltip = {
+			text = EVTOPTBanl.008.tooltip
+			add_character_modifier = {
+				modifier = arthurian_humility
+				duration = -1
+			}
+			character_event = {
+				id = anl.009
+				days = 8
+			}
+		}
+	}
+	option = {
+		name = EVTOPTCanl.008
+		character_event = {
+			id = anl.0081
+			days = 1
+		}
+	}
+}
+
+#Camelot quest chain event 8.1 - it's a trap!
+narrative_event = {
+	id = anl.0081
+	picture = GFX_evt_dead_body_hf
+	title = anl.title.0081
+	desc = EVTDESCanl.0081
+	border = GFX_event_narrative_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAanl.0081
+		hidden_tooltip = {
+			destroy_artifact = sword_stone_anl
+		}
+		death = {
+			death_reason = death_murder_unknown
+		}
+	}
+}
+
+#Camelot quest chain event 9 - the lost treasure
+narrative_event = {
+	id = anl.009
+	picture = GFX_evt_children_talking
+	title = anl.title.009
+	desc = EVTDESCanl.009
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAanl.009
+		trigger = {
+			NOT = {
+				has_character_flag = camelot_quest_no_supplies
+			}
+		}
+		custom_tooltip = {
+			text = EVTOPTAanl.009
+			if = {
+				limit = { has_character_flag = camelot_quest_many_supplies }
+				clr_character_flag = camelot_quest_many_supplies
+				set_character_flag = camelot_quest_supplies
+			}
+			else_if = {
+				limit = { has_character_flag = camelot_quest_supplies }
+				clr_character_flag = camelot_quest_supplies
+				set_character_flag = camelot_quest_few_supplies
+			}
+			else_if = {
+				limit = { has_character_flag = camelot_quest_few_supplies }
+				clr_character_flag = camelot_quest_few_supplies
+				set_character_flag = camelot_quest_no_supplies
+			}
+			character_event = {
+				id = anl.0091
+				days = 14
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBanl.009
+		trigger = {
+			treasury >= 100
+		}
+		wealth = -100
+		custom_tooltip = {
+			text = EVTOPTBanl.009
+			add_character_modifier = {
+				modifier = arthurian_loyalty
+				duration = -1
+			}
+			character_event = {
+				id = anl.010
+				days = 8
+			}
+		}
+	}
+	option = {
+		name = EVTOPTCanl.009
+		custom_tooltip = {
+			text = EVTOPTCanl.009
+			character_event = {
+				id = anl.010
+				days = 8
+			}
+		}
+	}
+}
+
+#Camelot quest chain event 9.1 - on the trail of treasure
+narrative_event = {
+	id = anl.0091
+	picture = GFX_evt_idyllic_fishing_wol
+	title = anl.title.0091
+	desc = EVTDESCanl.0091
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAanl.0091
+		character_event = {
+			id = anl.0092
+			days = 14
+		}
+	}
+}
+
+#Camelot quest chain event 9.2 - the children's treasure
+narrative_event = {
+	id = anl.0092
+	picture = GFX_evt_stone_church_soa
+	title = anl.title.0092
+	desc = EVTDESCanl.0092
+	border = GFX_event_narrative_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAanl.0092
+		custom_tooltip = {
+			text = EVTOPTAanl.0092.tooltip
+			add_character_modifier = {
+				modifier = arthurian_loyalty
+				duration = -1
+			}
+			add_character_modifier = {
+				modifier = arthurian_honesty
+				duration = -1
+			}
+			character_event = {
+				id = anl.010
+				days = 14
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBanl.0092
+		wealth = 1000
+		custom_tooltip = {
+			text = EVTOPTBanl.0092.tooltip
+			character_event = {
+				id = anl.010
+				days = 14
+			}
+		}
+	}
+}
+
+#Camelot quest chain event 10 - a clearing in the forest
+narrative_event = {
+	id = anl.010
+	picture = GFX_evt_bandits_forest
+	title = anl.title.010
+	desc = EVTDESCanl.010
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAanl.010
+		trigger = {
+			has_artifact = sword_stone_anl
+		}
+		destroy_artifact = sword_stone_anl
+		custom_tooltip = {
+			text = EVTOPTAanl.010.tooltip
+			add_character_modifier = {
+				modifier = arthurian_honour
+				duration = -1
+			}
+			character_event = {
+				id = anl.0101
+				days = 1
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBanl.010
+		trigger = {
+			NOT = {
+				has_artifact = sword_stone_anl
+			}
+		}
+		custom_tooltip = {
+			text = EVTOPTBanl.010.tooltip
+			character_event = {
+				id = anl.0101
+				days = 1
+			}
+		}
+	}
+}
+
+#Camelot quest chain event 10.1 - the discovery of camelot
+narrative_event = {
+	id = anl.0101
+	picture = GFX_evt_pilgrims_epic_journey
+	title = anl.title.0101
+	desc = EVTDESCanl.0101
+	border = GFX_event_narrative_frame_stewardship
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAanl.0101
+		character_event = {
+			id = anl.011
+			days = 90
+		}
+	}
+}
+
+#End of the Camelot quest chain (event 11) - the mythical camelot
+narrative_event = {
+	id = anl.011
+	picture = GFX_evt_rider_adventure
+	title = anl.title.011
+	desc = EVTDESCanl.011
+	border = GFX_event_narrative_frame_diplomacy
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				AND = {
+					has_character_modifier = arthurian_bravery
+					has_character_modifier = arthurian_chastity
+					has_character_modifier = arthurian_faith
+					has_character_modifier = arthurian_generosity
+					has_character_modifier = arthurian_honesty
+					has_character_modifier = arthurian_honour
+					has_character_modifier = arthurian_humility
+					has_character_modifier = arthurian_loyalty
+				}
+			}
+			set_character_flag = camelot_quest_all_virtues
+		}
+		else_if = {
+			limit = {
+				NOR = {
+					has_character_modifier = arthurian_bravery
+					has_character_modifier = arthurian_chastity
+					has_character_modifier = arthurian_faith
+					has_character_modifier = arthurian_generosity
+					has_character_modifier = arthurian_honesty
+					has_character_modifier = arthurian_honour
+					has_character_modifier = arthurian_humility
+					has_character_modifier = arthurian_loyalty
+				}
+			}
+			set_character_flag = camelot_quest_no_virtues
+		}
+		else = {
+			set_character_flag = camelot_quest_some_virtues
+		}
+	}
+	option = { #perfect ending
+		name = EVTOPTAanl.011
+		trigger = {
+			has_character_flag = camelot_quest_all_virtues
+		}
+		add_character_modifier = {
+			modifier = king_arthurs_blessing
+			days = -1
+		}
+		add_artifact = excalibur_anl
+		prestige = 1000
+	}
+	option = { #good ending
+		name = EVTOPTBanl.011
+		trigger = {
+			has_character_flag = camelot_quest_some_virtues
+		}
+		add_character_modifier = {
+			modifier = footsteps_of_king_arthur
+			days = 3650
+		}
+		prestige = 500
+	}
+	option = { #worst ending
+		name = EVTOPTCanl.011
+		trigger = {
+			has_character_flag = camelot_quest_no_virtues
+		}
+		prestige = 250
+	}
+	after = {
+		hidden_tooltip = {
+			set_global_flag = camelot_discovered
+			set_character_flag = camelot_quest_complete
+			clr_character_flag = camelot_quest
+			clr_character_flag = camelot_quest_no_supplies
+			clr_character_flag = camelot_quest_few_supplies
+			clr_character_flag = camelot_quest_supplies
+			clr_character_flag = camelot_quest_many_supplies
+			clr_character_flag = camelot_quest_all_virtues
+			clr_character_flag = camelot_quest_some_virtues
+			clr_character_flag = camelot_quest_no_virtues
+			remove_character_modifier = shivering_in_cold
+			remove_character_modifier = arthurian_bravery
+			remove_character_modifier = arthurian_chastity
+			remove_character_modifier = arthurian_faith
+			remove_character_modifier = arthurian_humility
+			remove_character_modifier = arthurian_generosity
+			remove_character_modifier = arthurian_loyalty
+			remove_character_modifier = arthurian_honesty
+			remove_character_modifier = arthurian_honour
+			if = {
+				limit = { has_artifact = sword_stone_anl }
+				destroy_artifact = sword_stone_anl
+			}
+			character_event = { id = anl.998 }
+		}
+	}
+}

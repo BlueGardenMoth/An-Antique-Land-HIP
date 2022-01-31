@@ -1,0 +1,71 @@
+#An Antique Land Maintenance Events
+
+namespace = anl
+
+#Removal of wonders with game rules or alternate start
+character_event = {
+	id = anl.999
+	is_triggered_only = yes
+	hide_window = yes
+	
+	immediate = {
+		if = {
+			limit = {
+				OR = {
+					is_alternate_start = yes
+					has_game_rule = {
+						name = an_antique_land_wonders
+						value = off
+					}
+				}
+			}
+			any_wonder = {
+				if = {
+					limit = { has_wonder = wonder_ozymandias }
+					location = { destroy_wonder = yes }
+				}
+				if = {
+					limit = { has_wonder = wonder_hanging_gardens }
+					location = { destroy_wonder = yes }
+				}
+				if = {
+					limit = { has_wonder = wonder_colossus_rhodes }
+					location = { destroy_wonder = yes }
+				}
+				if = {
+					limit = { has_wonder = wonder_temple_artemis }
+					location = { destroy_wonder = yes }
+				}
+				if = {
+					limit = { has_wonder = wonder_statue_zeus }
+					location = { destroy_wonder = yes }
+				}
+				if = {
+					limit = { has_wonder = wonder_obelisk_axum }
+					location = { destroy_wonder = yes }
+				}
+				if = {
+					limit = { has_wonder = wonder_sigiriya }
+					location = { destroy_wonder = yes }
+				}
+			}
+		}
+	}
+}
+
+#Discovery of Camelot
+character_event = {
+	id = anl.998
+	is_triggered_only = yes
+	hide_window = yes
+	
+	immediate = {
+		20 = {
+			add_wonder = wonder_camelot
+			wonder = {
+				set_name = wonder_camelot
+				set_description = wonder_camelot_desc
+			}
+		}
+	}
+}
